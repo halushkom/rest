@@ -2,13 +2,20 @@ const {Router} = require('express')
 const router = Router()
 const reservation = require('../models/reservation')
 const {check, validationResult} = require('express-validator')
-
+// api/reservation
 router.post(
     '/reservation',
     [
       check('email', 'Не вірний e-mail').isEmail(),
       check('name', 'Мінімальна довжина імені 3 символи')
-          .isLength({min: 3})
+          .isLength({min: 3}),
+      check('phone', 'Мінімальна довжина номеру 12 символів')
+          .isMobilePhone('uk-UA')
+          .notEmpty(true)
+          .isNumeric(true),
+      check('people').isNumeric(),
+      check('date').notEmpty(true),
+      check('time').notEmpty(true)
     ],
     async (request, response)=>{
     try {
